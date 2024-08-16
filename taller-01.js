@@ -32,7 +32,8 @@ function peorParidad(num) {
   return esPar ? "Es par" : "Es impar";
 }
 
-//console.log(convertidorTemp(100));
-//console.log(resolvedor(1, 2, -15, false));
-//console.log(mejorParidad(97));
-//console.log(peorParidad(2));
+// console.log(convertidorTemp(100));
+// console.log(resolvedor(1, 2, -15));
+// console.log(resolvedor(1, 2, -15, false));
+// console.log(mejorParidad(9));
+// console.log(peorParidad(9));
