@@ -8,7 +8,7 @@ function findMax(numeros) {
   return max;
 }
 
-console.log(findMax([3, 17, -1, 4, -19]), "findMax"); // true
+console.log(findMax([3, 17, -1, 4, -19]), "findMax"); // 17
 
 function includes(numeros, num) {
   for (let i = 0; i < numeros.length; i++) {
@@ -52,4 +52,4 @@ function missingNumbers(numeros) {
   return numFaltantes;
 }
 
-console.log(missingNumbers([7, 2, 4, 6, 3, 9]), "missingNumbers");
+console.log(missingNumbers([7, 2, 4, 6, 3, 9]), "missingNumbers"); // [5, 8]
