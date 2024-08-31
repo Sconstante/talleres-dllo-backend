@@ -23,7 +23,7 @@ console.log(includes([3, 17, -1, 4, -19], 2), "includes"); // false
 console.log(includes([3, 17, -1, 4, -19], 4), "includes"); // true
 
 function sum(numeros) {
-  return numeros.reduce((suma, num) => suma + num, 0);
+  return numeros.reduce((suma, num) => suma + num);
 }
 
 console.log(sum([3, 17, -1, 4, -19]), "sum"); // 4
