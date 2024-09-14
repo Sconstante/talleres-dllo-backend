@@ -9,9 +9,8 @@ function puntoUno(estudiantes) {
 
 console.log(puntoUno(datos))
 
-
 function puntoDos(estudiantes) {
-
+  // Calcular el promedio de las notas de cada materia y agregarlo a info_matricula
   const estudiantesConPromedio = estudiantes.map(estudiante => {
     const info_matricula = estudiante.info_matricula.map(materia => {
       const totalPeso = materia.notas.reduce((acumulado, n) => acumulado + n.peso, 0);
@@ -21,31 +20,18 @@ function puntoDos(estudiantes) {
     return { ...estudiante, info_matricula };
   });
 
-
+  // Calcular el promedio acumulado de cada estudiante
   const promediosAcumulados = estudiantesConPromedio.map(estudiante => {
-    const promediosPorSemestre = {};
+    const sumaPromedios = estudiante.info_matricula.reduce((acumulado, materia) => acumulado + materia.promedio, 0);
+    const promedioAcumulado = sumaPromedios / estudiante.info_matricula.length;
+    return {
+      nombreCompleto: `${estudiante.info_personal.nombre} ${estudiante.info_personal.apellido}`,
+      semestre: estudiante.info_matricula[0].semestre, // Asumimos que todas las materias son del mismo semestre
+      promedioAcumulado
+    };
+  });
 
-    estudiante.info_matricula.forEach(materia => {
-      if (!promediosPorSemestre[materia.semestre]) {
-        promediosPorSemestre[materia.semestre] = { sumaPromedios: 0, cantidadMaterias: 0 };
-      }
-      promediosPorSemestre[materia.semestre].sumaPromedios += materia.promedio;
-      promediosPorSemestre[materia.semestre].cantidadMaterias += 1;
-    });
-
-    const promediosFinales = Object.keys(promediosPorSemestre).map(semestre => {
-      const promedioAcumulado = promediosPorSemestre[semestre].sumaPromedios / promediosPorSemestre[semestre].cantidadMaterias;
-      return {
-        nombreCompleto: `${estudiante.info_personal.nombre} ${estudiante.info_personal.apellido}`,
-        semestre: parseInt(semestre),
-        promedioAcumulado
-      };
-    });
-
-    return promediosFinales;
-  }).flat();  
-
-
+  // Encontrar el mejor estudiante por semestre
   const mejoresEstudiantesPorSemestre = promediosAcumulados.reduce((acumulado, actual) => {
     if (!acumulado[actual.semestre] || actual.promedioAcumulado > acumulado[actual.semestre].promedioAcumulado) {
       acumulado[actual.semestre] = actual;
@@ -53,9 +39,9 @@ function puntoDos(estudiantes) {
     return acumulado;
   }, {});
 
-
   return Object.values(mejoresEstudiantesPorSemestre).map(est => est.nombreCompleto);
 }
+
 
 console.log(puntoDos(datos));
 
@@ -98,3 +84,6 @@ console.log(puntoTres(datos));
 
 
 
+
+
+    
