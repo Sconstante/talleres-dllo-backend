@@ -103,11 +103,7 @@ async function CreateUser(request: Request, response: Response) {
   });
 }
 
-async function TestEndpoint(request: Request, response: Response) {
-  response.status(200).json({
-    message: "sirve",
-  });
-}
+
 
 // DECLARE ENDPOINTS
 userRoutes.get("/", GetUsers);
@@ -116,7 +112,6 @@ userRoutes.get("/exists", CheckUserExists);
 userRoutes.get("/team-experience", GetTeamExperience);
 userRoutes.get("/by-faction", GetUsersByFaction);
 userRoutes.post("/", CreateUser);
-userRoutes.get("/test", TestEndpoint);
 
 // EXPORT ROUTES
 export default userRoutes;

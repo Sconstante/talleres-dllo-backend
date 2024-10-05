@@ -15,7 +15,6 @@ async function readUserById(id: string): Promise<UserType | null> {
 
 async function createUser(user: UserType): Promise<UserType> {
   const newUser = await createUserAction(user);
-  console.log("Usuarios actuales:", await readUsers()); // Agregar esta línea para verificar
   return newUser;
 }
 
