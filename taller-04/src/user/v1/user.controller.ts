@@ -1,6 +1,6 @@
 import readUserAction from "./read.user.action";
 import createUserAction from "./create.user.action";
-import { UserType, UserModel } from "./user.model";
+import { UserType, users } from "./user.model";
 
 // DECLARE CONTROLLER FUNCTIONS
 async function readUsers(): Promise<UserType[]> {
@@ -8,15 +8,34 @@ async function readUsers(): Promise<UserType[]> {
   return users;
 }
 
-async function readUserById(id: string): Promise<UserType | null> {
-  const user = await UserModel.findById(id);
-  return user;
+function createUser(user: UserType): UserType | null {
+  return createUserAction(user);
 }
 
-async function createUser(user: UserType): Promise<UserType> {
-  const newUser = await createUserAction(user);
-  return newUser;
+function readUsersByHobby(hobby: string): UserType[] {
+  return users.filter(user => user.hobbies.includes(hobby));
+}
+
+function checkUserExists(id: string): boolean {
+  const user = users.find(user => user.id === parseInt(id));
+  return user !== undefined;
+}
+
+function getTeamExperience(team: string): number {
+  const teamUsers = users.filter(user => user.team === team);
+  return teamUsers.reduce((sum, user) => sum + user.years, 0);
+}
+
+function readUsersByFaction(faction: string): UserType[] {
+  return users.filter(user => user.faction === faction);
 }
 
 // EXPORT CONTROLLER FUNCTIONS
-export { readUsers, readUserById, createUser };
+export {
+  readUsers,
+  createUser,
+  readUsersByHobby,
+  checkUserExists,
+  getTeamExperience,
+  readUsersByFaction
+};

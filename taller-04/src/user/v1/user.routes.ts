@@ -1,18 +1,27 @@
 import { Router, Request, Response } from "express";
-import { UserType, users } from "./user.model";
+import {
+  readUsers,
+  createUser,
+  readUsersByHobby,
+  checkUserExists,
+  getTeamExperience,
+  readUsersByFaction
+} from "./user.controller";
+import { UserType } from "./user.model";
 
 // INIT ROUTES
 const userRoutes = Router();
 
 // DECLARE ENDPOINT FUNCTIONS
 async function GetUsers(request: Request, response: Response) {
+  const users = await readUsers();
   response.status(200).json({
     message: "Success.",
     users: users,
   });
 }
 
-async function GetUsersByHobby(request: Request, response: Response) {
+function GetUsersByHobby(request: Request, response: Response) {
   const hobby = request.query.hobby as string;
   if (!hobby) {
     return response.status(400).json({
@@ -20,7 +29,7 @@ async function GetUsersByHobby(request: Request, response: Response) {
     });
   }
 
-  const filteredUsers = users.filter(user => user.hobbies.includes(hobby));
+  const filteredUsers = readUsersByHobby(hobby);
 
   response.status(200).json({
     message: "Success.",
@@ -28,7 +37,7 @@ async function GetUsersByHobby(request: Request, response: Response) {
   });
 }
 
-async function CheckUserExists(request: Request, response: Response) {
+function CheckUserExists(request: Request, response: Response) {
   const id = request.query.id as string;
   if (!id) {
     return response.status(400).json({
@@ -36,8 +45,7 @@ async function CheckUserExists(request: Request, response: Response) {
     });
   }
 
-  const user = users.find(user => user.id === parseInt(id));
-  const exists = user !== undefined;
+  const exists = checkUserExists(id);
 
   response.status(200).json({
     message: "Success.",
@@ -45,7 +53,7 @@ async function CheckUserExists(request: Request, response: Response) {
   });
 }
 
-async function GetTeamExperience(request: Request, response: Response) {
+function GetTeamExperience(request: Request, response: Response) {
   const team = request.query.team as string;
   if (!team) {
     return response.status(400).json({
@@ -53,8 +61,7 @@ async function GetTeamExperience(request: Request, response: Response) {
     });
   }
 
-  const teamUsers = users.filter(user => user.team === team);
-  const totalExperience = teamUsers.reduce((sum, user) => sum + user.years, 0);
+  const totalExperience = getTeamExperience(team);
 
   response.status(200).json({
     message: "Success.",
@@ -62,7 +69,7 @@ async function GetTeamExperience(request: Request, response: Response) {
   });
 }
 
-async function GetUsersByFaction(request: Request, response: Response) {
+function GetUsersByFaction(request: Request, response: Response) {
   const faction = request.query.faction as string;
   if (!faction) {
     return response.status(400).json({
@@ -70,7 +77,7 @@ async function GetUsersByFaction(request: Request, response: Response) {
     });
   }
 
-  const filteredUsers = users.filter(user => user.faction === faction);
+  const filteredUsers = readUsersByFaction(faction);
 
   response.status(200).json({
     message: "Success.",
@@ -78,7 +85,7 @@ async function GetUsersByFaction(request: Request, response: Response) {
   });
 }
 
-async function CreateUser(request: Request, response: Response) {
+function CreateUser(request: Request, response: Response) {
   const user = request.body as UserType;
   if (!user.name || !user.id) {
     return response.status(400).json({
@@ -86,24 +93,18 @@ async function CreateUser(request: Request, response: Response) {
     });
   }
 
-  // Check if the user already exists
-  const existingUser = users.find(u => u.id === user.id);
-  if (existingUser) {
+  const newUser = createUser(user);
+  if (!newUser) {
     return response.status(409).json({
       message: "User already exists.",
     });
   }
 
-  // Add the new user to the array
-  users.push(user);
-
   response.status(201).json({
     message: "User created successfully.",
-    user: user,
+    user: newUser,
   });
 }
-
-
 
 // DECLARE ENDPOINTS
 userRoutes.get("/", GetUsers);
